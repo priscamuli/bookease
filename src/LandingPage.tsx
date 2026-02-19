@@ -2,26 +2,13 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { CalendarDays, CreditCard, Users, Phone } from "lucide-react";
 import logo from "./assets/logo.png";
-import herobackground from "./assets/herobackground.png";
 import image4 from "./assets/image4.jpg";
+import PricingFormModal from "./pricingFormModal";
 
 function LandingPage() {
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const booking = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      date: formData.get("date"),
-      time: formData.get("time"),
-      service: formData.get("service"),
-    };
-    console.log("Booking submitted:", booking);
-    setSubmitted(true);
-    e.target.reset();
-  };
+ const [isModalOpen, setIsModalOpen] = useState(false); 
+ const [selectedPackage, setSelectedPackage] = useState(""); 
+ const openForm = (pkg: React.SetStateAction<string>) => { setSelectedPackage(pkg); setIsModalOpen(true); };
 
   return (
    <div className="bg-gradient-to-b from-orange-50 to-white text-gray-800">
@@ -35,7 +22,6 @@ function LandingPage() {
       <div className="hidden md:flex space-x-6">
         <a href="#home" className="text-orange-500 hover:text-orange-600 visited:text-orange-500">Home</a>
         <a href="#features" className="hover:text-orange-600">Features</a>
-        <a href="#demo" className="hover:text-orange-600">Demo</a>
         <a href="#pricing" className="hover:text-orange-600">Pricing</a>
         <a href="#contact" className="hover:text-orange-600">Contact</a>
       </div>
@@ -82,12 +68,6 @@ function LandingPage() {
             transition={{ delay: 0.5 }}
           >
             <a
-              href="#demo"
-              className="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 shadow-md transition"
-            >
-              Try Demo
-            </a>
-            <a
               href="#pricing"
               className="bg-gray-200 text-black px-6 py-3 rounded-lg hover:bg-gray-300 shadow-md transition"
             >
@@ -128,7 +108,7 @@ function LandingPage() {
       </section>
 
       {/* Demo Booking Form */}
-      <section id="demo" className="py-16 bg-white">
+      {/* <section id="demo" className="py-16 bg-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-orange-600">Try a Demo Booking</h2>
           <p className="mb-8 text-gray-600">Experience how easy it is to schedule an appointment with BookEase.</p>
@@ -174,41 +154,55 @@ function LandingPage() {
             )}
           </form>
         </div>
-      </section>
+      </section> */}
 
-      {/* Pricing Section */}
-            {/* Pricing Section */}
       <section id="pricing" className="py-16">
         <div className="container mx-auto text-center px-4">
-          <h2 className="text-2xl md:text-3xl font-bold mb-12 text-orange-600">Pricing Plans</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-12 text-orange-600">
+            Pricing Plans
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { plan: "Starter", kes: "KES 5,000/mo", usd: "$40/mo", desc: "Perfect for small businesses" },
-              { plan: "Professional", kes: "KES 15,000/mo", usd: "$120/mo", desc: "For growing businesses" },
-              { plan: "Enterprise", kes: "KES 50,000/mo", usd: "$400/mo", desc: "For large organizations" },
+              {
+                plan: "Starter",
+                kes: "KES 0/mo",
+                usd: "$0/mo",
+                desc: "Perfect for small businesses",
+              },
+              {
+                plan: "Professional",
+                kes: "KES 15,000/mo",
+                usd: "$120/mo",
+                desc: "For growing businesses",
+              },
+              {
+                plan: "Enterprise",
+                kes: "KES 50,000/mo",
+                usd: "$400/mo",
+                desc: "For large organizations",
+              },
             ].map((tier, index) => (
-              <motion.div
-                key={index}
-                className="bg-white p-6 md:p-8 rounded-xl shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105"
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                viewport={{ once: true }}
-              >
+              <motion.div key={index} className="bg-white p-6 md:p-8 rounded-xl shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105" initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: index * 0.2 }} viewport={{ once: true }} >
                 <h3 className="text-xl md:text-2xl font-bold mb-2">{tier.plan}</h3>
-                <p className="text-orange-600 text-2xl md:text-3xl font-semibold mb-1">{tier.kes}</p>
+                <p className="text-orange-600 text-2xl md:text-3xl font-semibold mb-1">
+                  {tier.kes}
+                </p>
                 <p className="text-gray-500 text-sm mb-4">{tier.usd}</p>
                 <p className="mb-4 text-gray-700 italic">{tier.desc}</p>
-                <a
-                  href="#demo"
-                  className="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition visited:text-white"
+                <button onClick={() => openForm(tier.plan)}
+                  className="bg-orange-600 text-orange-400 px-6 py-2 rounded-lg hover:bg-orange-700 transition"
                 >
                   Get Started
-                </a>
+                </button>
               </motion.div>
             ))}
           </div>
         </div>
+
+        {/* Modal */}
+        <PricingFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}
+          selectedPackage={selectedPackage}
+        />
       </section>
       {/* Call-to-Action Banner */}
 <section className="bg-gray-50 py-12">
@@ -220,12 +214,6 @@ function LandingPage() {
       Join businesses already using BookEase to manage appointments, payments, and customers effortlessly.
     </p>
     <div className="flex flex-col md:flex-row gap-4 justify-center">
-      <a
-        href="#demo"
-        className="bg-white text-orange-600 px-6 py-3 rounded-lg font-semibold hover:bg-orange-500 transition shadow-md"
-      >
-        Try Demo
-      </a>
       <a
         href="#pricing"
         className="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-900 transition shadow-md"
