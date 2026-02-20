@@ -4,11 +4,14 @@ import { CalendarDays, CreditCard, Users, Phone } from "lucide-react";
 import logo from "./assets/logo.png";
 import image4 from "./assets/image4.jpg";
 import PricingFormModal from "./pricingFormModal";
+import SuccessModal from "./sucessModal";
 
 function LandingPage() {
  const [isModalOpen, setIsModalOpen] = useState(false); 
  const [selectedPackage, setSelectedPackage] = useState(""); 
  const openForm = (pkg: React.SetStateAction<string>) => { setSelectedPackage(pkg); setIsModalOpen(true); };
+ const [showSuccess, setShowSuccess] = useState(false);
+
 
   return (
    <div className="bg-gradient-to-b from-orange-50 to-white text-gray-800">
@@ -202,7 +205,9 @@ function LandingPage() {
         {/* Modal */}
         <PricingFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}
           selectedPackage={selectedPackage}
+          onSuccess={() => setShowSuccess(true)}
         />
+        <SuccessModal isOpen={showSuccess} onClose={() => setShowSuccess(false)} />
       </section>
       {/* Call-to-Action Banner */}
 <section className="bg-gray-50 py-12">

@@ -4,16 +4,20 @@ interface PricingFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedPackage: string;
+  onSuccess: () => void;
 }
 
-const PricingFormModal: React.FC<PricingFormModalProps> = ({ isOpen, onClose, selectedPackage }) => {
+const PricingFormModal: React.FC<PricingFormModalProps> = ({ 
+    isOpen, 
+    onClose, 
+    selectedPackage,onSuccess }) => {
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Consultation request submitted for:", selectedPackage);
-    alert("Your consultation request has been sent!");
-    onClose();
+    onClose(); 
+    onSuccess();;
   };
 
   return (
